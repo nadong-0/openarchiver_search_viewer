@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="__APP_LANG__">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>__PAGE_TITLE__</title>
+    __APP_CONFIG_SCRIPT__
+    <link rel="stylesheet" href="/static/styles.css" />
+  </head>
+  <body class="mail-page">
+    <main class="mail-view-shell">
+      <section class="viewer-pane" aria-label="이메일 내용" data-i18n-attr="aria-label:emailContent">
+        <div class="viewer-header">
+          <div class="viewer-title">
+            <div id="viewer-subject" data-i18n="loadingMail">메일을 불러오는 중입니다.</div>
+            <div id="viewer-meta"></div>
+          </div>
+        </div>
+        <div id="mail-detail" class="mail-detail">
+          <div class="empty-state" style="display: flex; justify-content: center; align-items: center; height: 100%;">
+            <img src="/static/loading.gif" alt="Loading..." style="display: block; margin: 0 auto; max-width: 50px;">
+          </div>
+        </div>
+      </section>
+    </main>
+    <script src="/static/i18n.js"></script>
+    <script src="/static/mail_view.js"></script>
+  </body>
+</html>

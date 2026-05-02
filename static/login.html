@@ -1,0 +1,112 @@
+<!doctype html>
+<html lang="__APP_LANG__">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>__PAGE_TITLE__</title>
+  __APP_CONFIG_SCRIPT__
+  <link rel="stylesheet" href="/static/styles.css" />
+  <style>
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      background-color: #f8fafc;
+    }
+
+    .login-box {
+      background: white;
+      padding: 40px;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .login-box h1 {
+      font-size: 22px;
+      margin: 0 0 8px;
+      color: #1e293b;
+    }
+
+    .login-box .login-subtitle {
+      margin: 0 0 24px;
+      color: #64748b;
+      font-size: 14px;
+      font-weight: 600;
+    }
+
+    .login-form {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .login-form input {
+      width: 100%;
+      padding: 12px;
+      border: 1px solid #c8d1dc;
+      border-radius: 6px;
+      font-size: 16px;
+      box-sizing: border-box;
+    }
+
+    .login-form button {
+      width: 100%;
+      padding: 12px;
+      background: #2563eb;
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-size: 16px;
+      cursor: pointer;
+      font-weight: 600;
+    }
+
+    .login-form button:disabled {
+      background: #9aa8ba;
+      cursor: not-allowed;
+    }
+
+    .error-message {
+      color: #b42318;
+      font-size: 14px;
+      min-height: 20px;
+    }
+
+    .caps-lock-warning {
+      display: none;
+      margin-top: -8px;
+      color: #b45309;
+      font-size: 13px;
+      text-align: left;
+    }
+
+    .caps-lock-warning.visible {
+      display: block;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="login-container">
+    <div class="login-box">
+      <h1>__APP_TITLE__</h1>
+      <p class="login-subtitle" data-i18n="passwordPrompt">비밀번호 입력</p>
+      <form class="login-form" id="login-form">
+        <input type="password" id="password-input" placeholder="비밀번호" data-i18n-attr="placeholder:passwordPlaceholder" required autofocus />
+        <div class="caps-lock-warning" id="caps-lock-warning" role="status" data-i18n="capsLockWarning">Caps Lock이 켜져 있습니다.</div>
+        <div class="error-message" id="error-message"></div>
+        <button type="submit" id="login-button" data-i18n="loginButton">접속하기</button>
+      </form>
+    </div>
+  </div>
+  <script src="/static/i18n.js"></script>
+  <script src="/static/login.js"></script>
+</body>
+
+</html>

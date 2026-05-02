@@ -1,0 +1,14 @@
+[app]
+need_log_in = true
+language = "en"
+title = "Company Email Search"
+
+[openarchiver]
+api_search = "/api/v1/search"
+api_mail_get = "/api/v1/archived-emails/"
+api_storage_download = "/api/v1/storage/download"
+
+[search]
+matching_strategy = "last"
+max_limit = 100
+enable_exact_filter = false
