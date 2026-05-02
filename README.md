@@ -1,6 +1,6 @@
 # OpenArchiver Search Viewer
 
-A web app for quickly searching archived emails through the OpenArchiver API in an Outlook-style interface.
+A web app for quickly searching archived emails through the [OpenArchiver](https://github.com/LogicLabs-OU/OpenArchiver) API in an Outlook-style interface.
 
 This project is not an official OpenArchiver project.
 
