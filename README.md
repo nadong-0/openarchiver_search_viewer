@@ -90,6 +90,7 @@ The app works without changing these settings, but you can adjust several option
 ## Notes
 
 Although the app only uses read operations through the API, it is recommended to grant the API key read-only permissions.
+
 This project has limited security protections and is not responsible for any issues that occur during use.
 
 ---
@@ -99,8 +100,11 @@ This project has limited security protections and is not responsible for any iss
 # OpenArchiver 검색 뷰어
 
 OpenArchiver API를 이용해 아카이빙된 이메일을 Outlook 스타일로 빠르게 검색할 수 있는 웹앱입니다.
+
 이 프로젝트는 OpenArchiver의 공식 프로젝트가 아닙니다.
+
 운영중인 OpenArchiver 서버에 API 접근이 가능해야 합니다.
+
 OpenArchiver v0.5.0 에서 테스트 되었습니다.
 
 ![ScreenShot](./screenshot.jpg)
