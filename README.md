@@ -1,8 +1,11 @@
 # OpenArchiver Search Viewer
 
 A web app for quickly searching archived emails through the OpenArchiver API in an Outlook-style interface.
+
 This project is not an official OpenArchiver project.
+
 You need API access to a running OpenArchiver server.
+
 Tested with OpenArchiver v0.5.0
 
 ![ScreenShot](./screenshot.jpg)
@@ -184,5 +187,6 @@ http://서버IP:8000/
 ## 주의사항
 
 API에서 읽는 기능만 사용하지만 API키를 읽기권한만 주는 것을 권장합니다.
+
 이 프로젝트는 보안성이 낮으며 사용상 발생하는 어떤 문제에 대해서도 책임지지 않습니다.
 
