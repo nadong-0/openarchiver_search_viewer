@@ -1,5 +1,5 @@
 [app]
-need_log_in = true
+need_log_in = false
 language = "en"
 title = "Company Email Search"
 
