@@ -99,7 +99,7 @@ This project has limited security protections and is not responsible for any iss
 
 # OpenArchiver 검색 뷰어
 
-OpenArchiver API를 이용해 아카이빙된 이메일을 Outlook 스타일로 빠르게 검색할 수 있는 웹앱입니다.
+[OpenArchiver](https://github.com/LogicLabs-OU/OpenArchiver) API를 이용해 아카이빙된 이메일을 Outlook 스타일로 빠르게 검색할 수 있는 웹앱입니다.
 
 이 프로젝트는 OpenArchiver의 공식 프로젝트가 아닙니다.
 
