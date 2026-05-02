@@ -29,6 +29,7 @@ ROOT = Path(__file__).resolve().parent
 STATIC_DIR = ROOT / "static"
 CONFIG_PATH = ROOT / "config.toml"
 MIN_SEARCH_LIMIT = 10
+LOGIN_REMEMBER_SECONDS = 7 * 24 * 60 * 60
 ACTIVE_ATTACHMENT_EXTENSIONS = {
     ".htm",
     ".html",
@@ -256,6 +257,16 @@ def required_config_bool(section: str, name: str) -> bool:
     return value
 
 
+def optional_config_bool(section: str, name: str, default: bool) -> bool:
+    section_value = CONFIG.get(section)
+    if not isinstance(section_value, dict) or name not in section_value:
+        return default
+    value = section_value[name]
+    if not isinstance(value, bool):
+        raise RuntimeError(f"Invalid boolean config value: {section}.{name}")
+    return value
+
+
 def required_config_positive_int(section: str, name: str) -> int:
     value = required_config(section, name)
     if not isinstance(value, int):
@@ -266,6 +277,7 @@ def required_config_positive_int(section: str, name: str) -> int:
 
 
 NEED_LOG_IN = required_config_bool("app", "need_log_in")
+REMEMBER_LOGIN = optional_config_bool("app", "remember_login", False)
 SITE_PASSWORD = required_env("SITE_PASSWORD") if NEED_LOG_IN else ""
 APP_LANGUAGE = required_config_language("app", "language")
 APP_MESSAGES = I18N[APP_LANGUAGE]
@@ -275,7 +287,7 @@ APP_TITLE = required_config_str("app", "title")
 app = FastAPI(title=APP_TITLE)
 app.mount("/static", StaticFiles(directory=STATIC_DIR), name="static")
 
-VALID_SESSIONS = set()
+VALID_SESSIONS: dict[str, float | None] = {}
 
 
 def t(key: str, **values: Any) -> str:
@@ -304,10 +316,37 @@ def render_static_template(filename: str, page_title: str) -> str:
         .replace("__APP_CONFIG_SCRIPT__", app_config_script())
     )
 
-def verify_api_auth(auth_token: str | None = Cookie(None)):
+def current_timestamp() -> float:
+    return datetime.now(timezone.utc).timestamp()
+
+
+def remember_login_expires_at() -> float | None:
+    if not REMEMBER_LOGIN:
+        return None
+    return current_timestamp() + LOGIN_REMEMBER_SECONDS
+
+
+def prune_expired_sessions() -> None:
+    now = current_timestamp()
+    for token, expires_at in list(VALID_SESSIONS.items()):
+        if expires_at is not None and expires_at <= now:
+            VALID_SESSIONS.pop(token, None)
+
+
+def is_valid_auth_token(auth_token: str | None) -> bool:
     if not NEED_LOG_IN:
-        return
+        return True
     if not auth_token or auth_token not in VALID_SESSIONS:
+        return False
+    expires_at = VALID_SESSIONS[auth_token]
+    if expires_at is not None and expires_at <= current_timestamp():
+        VALID_SESSIONS.pop(auth_token, None)
+        return False
+    return True
+
+
+def verify_api_auth(auth_token: str | None = Cookie(None)):
+    if not is_valid_auth_token(auth_token):
         raise HTTPException(status_code=401, detail="Unauthorized")
 
 class LoginRequest(BaseModel):
@@ -322,16 +361,20 @@ async def login(req: LoginRequest):
         await asyncio.sleep(random.uniform(1.0, 3.0))
         raise HTTPException(status_code=401, detail=t("invalidPassword"))
     
+    prune_expired_sessions()
     token = uuid.uuid4().hex
-    VALID_SESSIONS.add(token)
+    VALID_SESSIONS[token] = remember_login_expires_at()
     response = JSONResponse({"success": True})
-    response.set_cookie(key="auth_token", value=token, httponly=True)
+    cookie_options: dict[str, Any] = {"httponly": True, "samesite": "lax"}
+    if REMEMBER_LOGIN:
+        cookie_options["max_age"] = LOGIN_REMEMBER_SECONDS
+    response.set_cookie(key="auth_token", value=token, **cookie_options)
     return response
 
 @app.post("/api/logout")
 def logout(auth_token: str | None = Cookie(None)):
     if auth_token in VALID_SESSIONS:
-        VALID_SESSIONS.remove(auth_token)
+        VALID_SESSIONS.pop(auth_token, None)
     response = JSONResponse({"success": True})
     response.delete_cookie("auth_token")
     return response
@@ -814,7 +857,7 @@ def timestamp_sort_key(item: dict[str, Any]) -> tuple[int, int]:
 @app.get("/")
 def index(request: Request) -> Response:
     auth_token = request.cookies.get("auth_token")
-    if NEED_LOG_IN and (not auth_token or auth_token not in VALID_SESSIONS):
+    if not is_valid_auth_token(auth_token):
         return RedirectResponse(url="/login")
     
     content = render_static_template("index.html", t("indexPageTitle", title=APP_TITLE))
@@ -849,7 +892,7 @@ def index(request: Request) -> Response:
 @app.get("/mail/{message_id}")
 def mail_view(request: Request, message_id: UUID) -> Response:
     auth_token = request.cookies.get("auth_token")
-    if NEED_LOG_IN and (not auth_token or auth_token not in VALID_SESSIONS):
+    if not is_valid_auth_token(auth_token):
         return RedirectResponse(url="/login")
     content = render_static_template("mail.html", t("mailViewTitle"))
     return Response(content=content, media_type="text/html")

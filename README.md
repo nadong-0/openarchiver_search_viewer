@@ -78,6 +78,7 @@ The app works without changing these settings, but you can adjust several option
 `config.toml` options:
 
 - `app.need_log_in`: Enables app login when set to `true`.
+- `app.remember_login`: Keeps login for 7 days across browser restarts when set to `true`.
 - `app.language`: App language. Supports `ko` or `en`.
 - `app.title`: App title.
 - `openarchiver.api_search`: Search API path.
@@ -179,6 +180,7 @@ http://서버IP:8000/
 `config.toml` 옵션:
 
 - `app.need_log_in`: `true`이면 앱 로그인 사용
+- `app.remember_login`: `true`이면 브라우저를 껐다 켜도 로그인을 7일간 유지합니다.
 - `app.language`: 앱 언어. `ko` 또는 `en`을 지원합니다.
 - `app.title`: 앱 제목
 - `openarchiver.api_search`: 검색 API 경로
