@@ -136,7 +136,7 @@ uv sync
 `.env.example`을 `.env`로 복사하고 값을 수정합니다.
 
 ```powershell
-Copy-Item .env.example .env
+cp .env.example .env
 ```
 
 `.env` 필수 값:
