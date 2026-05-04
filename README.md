@@ -36,7 +36,7 @@ uv sync
 Copy `.env.example` to `.env` and update the values.
 
 ```powershell
-Copy-Item .env.example .env
+cp .env.example .env
 ```
 
 Required `.env` values:
