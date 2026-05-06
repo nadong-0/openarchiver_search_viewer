@@ -33,6 +33,13 @@ function isExactMode() {
   return Boolean(exactInput?.checked);
 }
 
+function searchHighlightTerms(query) {
+  return query
+    .split(/\s+/)
+    .map((term) => term.trim().replace(/^["']+|["']+$/g, ""))
+    .filter(Boolean);
+}
+
 function loadSearchHistory() {
   try {
     const parsed = JSON.parse(localStorage.getItem(SEARCH_HISTORY_KEY) || "[]");
@@ -298,7 +305,7 @@ function renderDetail(item) {
   body.className = "detail-body";
 
   const q = queryInput.value.trim();
-  const terms = isExactMode() && q ? [q] : q.split(/\s+/).filter(Boolean);
+  const terms = searchHighlightTerms(q);
 
   if (item.bodyHtml) {
     const frame = document.createElement("iframe");
